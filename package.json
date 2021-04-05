@@ -1,0 +1,16 @@
+{
+  "name": "caviar-server",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "node src/main.js | pino-pretty"
+  },
+  "dependencies": {
+    "@camaro/redis": "^2.1.0",
+    "koa": "^2.13.1",
+    "koa-pino-logger": "^3.0.0",
+    "koa-router": "^10.0.0",
+    "koa2-cors": "^2.0.6",
+    "luxon": "^1.26.0"
+  }
+}
