@@ -1,1 +1,12 @@
-POST http://localhost:3000/
+### Hello World
+POST http://localhost:3000/user-moments
+
+### 
+POST http://localhost:3000/base-user
+Content-Type: application/json
+
+{
+    "name":"Hendry",
+    "salary":"61888",
+    "age":"26"
+}
