@@ -1,12 +1,50 @@
-### Hello World
-POST http://localhost:3000/user-moments
-
-### 
-POST http://localhost:3000/base-user
+### 创建新用户
+POST http://localhost:3000/new-user
 Content-Type: application/json
 
 {
-    "name":"Hendry",
-    "salary":"61888",
-    "age":"26"
+    "nickName":"first-friend",
+    "avatar":"https://avataaars.io/?avatarStyle=Circle"
+}
+
+### 添加新瞬间
+POST http://localhost:3000/new-moment
+Content-Type: application/json
+
+{
+    "userId":"100001",
+    "content":"friend first moment"
+}
+
+### 添加新朋友
+POST http://localhost:3000/new-friend
+Content-Type: application/json
+
+{
+    "userId":"100000",
+    "friendId":"100001"
+}
+
+### 查询近况
+POST http://localhost:3000/recent
+Content-Type: application/json
+
+{
+    "userId":"100000"
+}
+
+### 查询朋友
+POST http://localhost:3000/friends
+Content-Type: application/json
+
+{
+    "userId":"100000"
+}
+
+### 查询所有瞬间
+POST http://localhost:3000/moments
+Content-Type: application/json
+
+{
+    "userId":"100000"
 }
