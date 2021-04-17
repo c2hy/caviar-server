@@ -12,12 +12,30 @@ POST http://localhost:3000/new-moment
 Content-Type: application/json
 
 {
-    "userId":"100001",
-    "content":"friend first moment"
+    "userId":"100000",
+    "content":"will be remove moment"
+}
+
+### 删除瞬间
+POST http://localhost:3000/remove-moment
+Content-Type: application/json
+
+{
+    "userId":"100000",
+    "momentId":"2fdfa4d1-c6e1-4d94-95b2-61d8e3ad3e9c"
 }
 
 ### 添加新朋友
 POST http://localhost:3000/new-friend
+Content-Type: application/json
+
+{
+    "userId":"100000",
+    "friendId":"100001"
+}
+
+### 删除朋友
+POST http://localhost:3000/remove-friend
 Content-Type: application/json
 
 {

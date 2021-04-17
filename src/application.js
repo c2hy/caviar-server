@@ -1,6 +1,6 @@
 const Router = require("koa-router");
-const { DateTime } = require("luxon");
 const { redisClient } = require("./infrastructure");
+const { DateTime } = require("luxon");
 const { v4: uuid } = require('uuid');
 
 const router = new Router();
@@ -16,19 +16,27 @@ router.post("/new-moment", async (ctx) => {
   const { userId, content } = ctx.request.body;
   const momentId = uuid();
   const createdTime = DateTime.now().toMillis();
-  await redisClient.ZADD(`moment:${userId}`, createdTime, JSON.stringify({ momentId, content, createdTime }))
+  const base64Content = Buffer.from(content).toString("base64")
+  await redisClient.SET(`moment:${momentId}`, JSON.stringify({ momentId, content: base64Content, createdTime }))
+  await redisClient.ZADD(`user:moment:${userId}`, createdTime, momentId)
   ctx.body = { momentId };
 })
 
 router.post("/remove-moment", async (ctx) => {
   const { userId, momentId } = ctx.request.body;
-  await redisClient.ZADD(`moment:${userId}`, createdTime, JSON.stringify({ momentId, moment, createdTime }))
+  await redisClient.ZREM(`user:moment:${userId}`, momentId)
   ctx.body = {};
 })
 
 router.post("/new-friend", async (ctx) => {
   const { userId, friendId } = ctx.request.body;
-  await redisClient.LPUSH(`friend:${userId}`, friendId);
+  await redisClient.SADD(`user:friend:${userId}`, friendId);
+  ctx.body = {};
+})
+
+router.post("/remove-friend", async (ctx) => {
+  const { userId, friendId } = ctx.request.body;
+  await redisClient.SREM(`user:friend:${userId}`, friendId);
   ctx.body = {};
 })
 
@@ -39,13 +47,17 @@ router.post("/current-user", async (ctx) => {
 
 router.post("/moments", async (ctx) => {
   const userId = ctx.request.body.userId;
-  const moments = await redisClient.ZREVRANGE(`moment:${userId}`, 0, 100)
-  ctx.body = moments.map(v => JSON.parse(v))
+  const momentIds = await redisClient.ZREVRANGE(`user:moment:${userId}`, 0, 100)
+  const momentList = []
+  for (const momentId of momentIds) {
+    momentList.push(await redisClient.GET(`moment:${momentId}`).then(v => JSON.parse(v)))
+  }
+  ctx.body = momentList
 })
 
 router.post("/friends", async (ctx) => {
   const { userId } = ctx.request.body
-  const friendIds = await redisClient.LRANGE(`friend:${userId}`, 0, -1)
+  const friendIds = await redisClient.SMEMBERS(`user:friend:${userId}`)
   const friendList = []
   for (const friendId of friendIds) {
     const friend = await redisClient.GET(`user:${friendId}`)
@@ -56,12 +68,12 @@ router.post("/friends", async (ctx) => {
 
 router.post("/recent", async (ctx) => {
   const { userId } = ctx.request.body
-  const friendIds = await redisClient.LRANGE(`friend:${userId}`, 0, -1)
+  const friendIds = await redisClient.SMEMBERS(`user:friend:${userId}`)
   const friendList = []
   for (const friendId of friendIds) {
     const friend = await redisClient.GET(`user:${friendId}`).then(v => JSON.parse(v))
-    const moment = await redisClient.ZREVRANGE(`moment:${friendId}`, 0, 0).then(v => v.pop() || "{}")
-    friend.newestMoment = JSON.parse(moment)
+    const momentId = await redisClient.ZREVRANGE(`user:moment:${friendId}`, 0, 0).then(v => v.pop() || "{}")
+    friend.newestMoment = await redisClient.GET(`moment:${momentId}`).then(v => JSON.parse(v))
     friendList.push(friend)
   }
   ctx.body = friendList
