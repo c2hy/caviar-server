@@ -10,6 +10,5 @@ app.silent = true;
 app
   .use(logger())
   .use(koaBody())
-  .use(cors())
   .use(router.routes())
   .listen(3000);

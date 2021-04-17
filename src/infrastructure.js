@@ -1,2 +1,3 @@
 const { ClientV3: Client } = require("@camaro/redis");
-exports.redisClient = new Client({ password: "123456" });
+const reidsConfig = process.env.NODE_ENV === "prod" ? { password: "suzor" } : { password: "123456" }
+exports.redisClient = new Client(reidsConfig);
