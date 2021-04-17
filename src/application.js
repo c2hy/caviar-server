@@ -16,8 +16,7 @@ router.post("/new-moment", async (ctx) => {
   const { userId, content } = ctx.request.body;
   const momentId = uuid();
   const createdTime = DateTime.now().toMillis();
-  const base64Content = Buffer.from(content).toString("base64")
-  await redisClient.SET(`moment:${momentId}`, JSON.stringify({ momentId, content: base64Content, createdTime }))
+  await redisClient.SET(`moment:${momentId}`, JSON.stringify({ momentId, content, createdTime }))
   await redisClient.ZADD(`user:moment:${userId}`, createdTime, momentId)
   ctx.body = { momentId };
 })
