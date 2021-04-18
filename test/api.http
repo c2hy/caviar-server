@@ -4,16 +4,28 @@ Content-Type: application/json
 
 {
     "nickName":"first-friend",
-    "avatar":"https://avataaars.io/?avatarStyle=Circle"
+    "avatar":"https://avataaars.io/?avatarStyle=Circle",
+    "password":"66666"
 }
+
+### 创建 token
+POST http://localhost:3000/new-token
+Content-Type: application/json
+
+{
+    "userId":"100000",
+    "password":"666666"
+}
+
+### 查询当前用户
+POST http://localhost:3000/current-user
 
 ### 添加新瞬间
 POST http://localhost:3000/new-moment
 Content-Type: application/json
 
 {
-    "userId":"100000",
-    "content":"中文瞬间"
+    "content":"范范大魔王的傲娇日常"
 }
 
 ### 删除瞬间
@@ -21,7 +33,6 @@ POST http://localhost:3000/remove-moment
 Content-Type: application/json
 
 {
-    "userId":"100000",
     "momentId":"2fdfa4d1-c6e1-4d94-95b2-61d8e3ad3e9c"
 }
 
@@ -30,8 +41,7 @@ POST http://localhost:3000/new-friend
 Content-Type: application/json
 
 {
-    "userId":"100000",
-    "friendId":"100001"
+    "friendUserId":"100001"
 }
 
 ### 删除朋友
@@ -39,30 +49,23 @@ POST http://localhost:3000/remove-friend
 Content-Type: application/json
 
 {
-    "userId":"100000",
-    "friendId":"100001"
+    "friendId":"73e756e7-c59d-4e4d-94e9-5206ccf7fb58"
 }
 
 ### 查询近况
 POST http://localhost:3000/recent
-Content-Type: application/json
-
-{
-    "userId":"100000"
-}
 
 ### 查询朋友
 POST http://localhost:3000/friends
+
+### 查询账号拥有者的所有瞬间
+POST http://localhost:3000/owner-moments
+Content-Type: application/json
+
+### 查询朋友的所有瞬间
+POST http://localhost:3000/friend-moments
 Content-Type: application/json
 
 {
-    "userId":"100000"
-}
-
-### 查询所有瞬间
-POST http://localhost:3000/moments
-Content-Type: application/json
-
-{
-    "userId":"100000"
+    "friendId":"df5e1edc-a412-4c1e-b898-81c5b1a3c1ac"
 }

@@ -1,10 +1,8 @@
-const { redisClient } = require("../src/infrastructure")
-const { DateTime } = require("luxon");
-const { v4: uuid } = require('uuid');
+
+const bcrypt = require('bcrypt');
 
 async function test() {
-    const list = []
-    list.push({lst:"123"})
+    console.info(await bcrypt.hash("666666", 13))
 }
 
 test()
